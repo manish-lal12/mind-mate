@@ -110,7 +110,7 @@ export default function ChatPage() {
         }, 500);
       }
     }
-  }, [getChatQuery.data, session?.user?.id, chatId, generateResponse]);
+  }, [getChatQuery.data, session?.user?.id, chatId]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isSending || !session?.user?.id) return;
