@@ -15,10 +15,27 @@ const getAuthBaseURL = (): string => {
   return "http://localhost:3000";
 };
 
+const getAllowedOrigins = (): string[] => {
+  const origins = ["http://localhost:3000", "http://localhost"];
+
+  // Add Vercel URL
+  if (process.env.VERCEL_URL) {
+    origins.push(`https://${process.env.VERCEL_URL}`);
+  }
+
+  // Add custom domain
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    origins.push(process.env.NEXT_PUBLIC_APP_URL);
+  }
+
+  return origins;
+};
+
 export const auth = betterAuth({
   basePath: "/api/auth",
   baseURL: getAuthBaseURL(),
   trustHost: true,
+  allowedOrigins: getAllowedOrigins(),
   database: prismaAdapter(
     prisma as unknown as Parameters<typeof prismaAdapter>[0],
     {
