@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "~/lib/auth-client";
 
-export default function ChatLayout({
+export default function ChatIdLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const { data: session, isPending } = useSession();
@@ -19,7 +19,16 @@ export default function ChatLayout({
 
   // Show loading state while session is being fetched
   if (isPending) {
-    return;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-50 via-blue-50 to-green-50">
+        <div className="text-center">
+          <div className="mb-4 inline-flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-blue-500" />
+          </div>
+          <p className="text-slate-600">Loading your session...</p>
+        </div>
+      </div>
+    );
   }
 
   // Don't render anything if not authenticated (redirect happens in useEffect)
