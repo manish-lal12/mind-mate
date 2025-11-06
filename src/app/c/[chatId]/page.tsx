@@ -6,6 +6,7 @@ import { Send } from "lucide-react";
 import { api } from "~/trpc/react";
 import { useSession } from "~/lib/auth-client";
 import { ConversationSidebar } from "~/app/_components/conversation-sidebar";
+import { Button } from "~/app/_components/ui/button";
 
 interface Message {
   id: string;
@@ -97,7 +98,7 @@ export default function ChatPage() {
         }, 500);
       }
     }
-  }, [getChatQuery.data, session?.user?.id, chatId]);
+  }, [getChatQuery.data, session?.user?.id, chatId, generateResponse]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isSending || !session?.user?.id) return;
@@ -231,10 +232,10 @@ export default function ChatPage() {
                 onChange={(e) => {
                   setInputValue(e.target.value);
                 }}
-                onKeyDown={(e) => {
+                onKeyDown={async (e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    handleSend();
+                    await handleSend();
                   }
                 }}
                 placeholder="Type your message..."
@@ -250,7 +251,7 @@ export default function ChatPage() {
                 Press <span className="font-medium">Shift + Enter</span> for new
                 line
               </p>
-              <button
+              <Button
                 onClick={handleSend}
                 disabled={!inputValue.trim() || isSending || isLLMProcessing}
                 className="inline-flex items-center gap-2 rounded-lg bg-linear-to-r from-blue-600 to-blue-700 px-5 py-2.5 font-medium text-white transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:from-slate-400 disabled:to-slate-400 disabled:shadow-none"
@@ -263,7 +264,7 @@ export default function ChatPage() {
                       ? "Generating..."
                       : "Send"}
                 </span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>

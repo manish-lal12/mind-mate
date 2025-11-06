@@ -135,9 +135,9 @@ export async function streamLLMResponse(
           "text" in chunkAny &&
           typeof (chunkAny as Record<string, unknown>).text === "function"
         ) {
-          text = await (
-            (chunkAny as Record<string, unknown>).text as () => Promise<string>
-          )();
+          const fn = (chunkAny as Record<string, unknown>)
+            .text as () => Promise<string>;
+          text = await fn();
         }
         // Check if chunk has candidates array with content
         else if (

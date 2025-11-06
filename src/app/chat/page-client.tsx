@@ -16,7 +16,7 @@ export default function GreetingPageClient() {
   // Extract first name from full name
   const getFirstName = (fullName?: string): string => {
     if (!fullName) return "";
-    return fullName.split(" ")[0] as string;
+    return fullName.split(" ")[0]!;
   };
 
   const createChat = api.chat.create.useMutation({

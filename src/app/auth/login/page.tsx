@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { GoogleSignInButton } from "~/app/_components/signInWithGoogle";
 
-export default function LoginPage() {
+function LoginContent() {
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -57,7 +57,13 @@ export default function LoginPage() {
           <div className="px-8 py-8">
             {/* Main Sign In Button */}
             <div className="mb-6">
-              <GoogleSignInButton />
+              <Suspense
+                fallback={
+                  <div className="h-10 animate-pulse rounded-lg bg-slate-200" />
+                }
+              >
+                <GoogleSignInButton />
+              </Suspense>
             </div>
 
             {/* Divider */}
@@ -145,4 +151,8 @@ export default function LoginPage() {
       </div>
     </main>
   );
+}
+
+export default function LoginPage() {
+  return <LoginContent />;
 }

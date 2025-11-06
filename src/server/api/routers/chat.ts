@@ -7,7 +7,6 @@ export const chatRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ message: z.string().min(1), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.create({
         data: {
           userId: input.userId,
@@ -23,14 +22,12 @@ export const chatRouter = createTRPCRouter({
           messages: true,
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return chat;
     }),
 
   getAll: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chats = await ctx.db.chat.findMany({
         where: {
           userId: input.userId,
@@ -50,14 +47,12 @@ export const chatRouter = createTRPCRouter({
         },
         take: 50,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return chats;
     }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string(), userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.findFirst({
         where: {
           id: input.id,
@@ -71,7 +66,6 @@ export const chatRouter = createTRPCRouter({
           },
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return chat;
     }),
 
@@ -86,7 +80,6 @@ export const chatRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Verify user owns this chat
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.findFirst({
         where: {
           id: input.chatId,
@@ -98,7 +91,6 @@ export const chatRouter = createTRPCRouter({
         throw new Error("Chat not found or unauthorized");
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const message = await ctx.db.message.create({
         data: {
           chatId: input.chatId,
@@ -108,20 +100,17 @@ export const chatRouter = createTRPCRouter({
       });
 
       // Update chat's updatedAt timestamp
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       await ctx.db.chat.update({
         where: { id: input.chatId },
         data: { updatedAt: new Date() },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return message;
     }),
 
   delete: publicProcedure
     .input(z.object({ id: z.string(), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.findFirst({
         where: {
           id: input.id,
@@ -133,7 +122,6 @@ export const chatRouter = createTRPCRouter({
         throw new Error("Chat not found or unauthorized");
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       await ctx.db.chat.delete({
         where: { id: input.id },
       });
@@ -150,7 +138,6 @@ export const chatRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.findFirst({
         where: {
           id: input.id,
@@ -162,13 +149,11 @@ export const chatRouter = createTRPCRouter({
         throw new Error("Chat not found or unauthorized");
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const updated = await ctx.db.chat.update({
         where: { id: input.id },
         data: { title: input.title },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return updated;
     }),
 
@@ -189,7 +174,6 @@ export const chatRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Verify user owns this chat
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const chat = await ctx.db.chat.findFirst({
         where: {
           id: input.chatId,
@@ -203,7 +187,7 @@ export const chatRouter = createTRPCRouter({
 
       // Convert to Message format for LLM
       const llmMessages: Message[] = input.messages.map((m) => ({
-        role: m.role as "user" | "assistant",
+        role: m.role,
         content: m.content,
       }));
 
@@ -211,7 +195,6 @@ export const chatRouter = createTRPCRouter({
       const response = await getLLMResponse(llmMessages, input.model);
 
       // Save assistant message to database
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const assistantMessage = await ctx.db.message.create({
         data: {
           chatId: input.chatId,
@@ -221,13 +204,11 @@ export const chatRouter = createTRPCRouter({
       });
 
       // Update chat's updatedAt timestamp
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       await ctx.db.chat.update({
         where: { id: input.chatId },
         data: { updatedAt: new Date() },
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return assistantMessage;
     }),
 });
