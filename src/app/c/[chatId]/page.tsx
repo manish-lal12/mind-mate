@@ -30,6 +30,18 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [isLLMProcessing, setIsLLMProcessing] = useState(false);
+  const [sessionTimeout, setSessionTimeout] = useState(false);
+
+  // Set timeout to stop loading if session takes too long
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!session?.user?.id) {
+        setSessionTimeout(true);
+      }
+    }, 5000); // 5 second timeout
+
+    return () => clearTimeout(timeout);
+  }, [session?.user?.id]);
 
   // Fetch chat
   const getChatQuery = api.chat.getById.useQuery(
@@ -143,7 +155,7 @@ export default function ChatPage() {
     });
   };
 
-  if (isLoading) {
+  if (isLoading && !sessionTimeout) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="space-y-3 text-center">
