@@ -2,16 +2,19 @@ import { PrismaClient } from "@prisma/client";
 
 import { env } from "~/env";
 
-const createPrismaClient = () =>
+const createPrismaClient = (): PrismaClient =>
   new PrismaClient({
     log:
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: ReturnType<typeof createPrismaClient> | undefined;
+// Use type assertion to properly define the global
+const globalWithPrisma = globalThis as {
+  prisma?: PrismaClient;
 };
 
-export const db = globalForPrisma.prisma ?? createPrismaClient();
+export const db: PrismaClient = globalWithPrisma.prisma ?? createPrismaClient();
 
-if (env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+if (env.NODE_ENV !== "production") {
+  globalWithPrisma.prisma = db;
+}

@@ -36,6 +36,16 @@ export default tseslint.config(
     },
   },
   {
+    files: ["src/server/**/*.ts"],
+    rules: {
+      // Prisma operations have `any` types, so we suppress these specific rules for server code
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+    },
+  },
+  {
     linterOptions: {
       reportUnusedDisableDirectives: true,
     },

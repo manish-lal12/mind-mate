@@ -2,28 +2,29 @@
 
 import { useSearchParams } from "next/navigation";
 import { signIn } from "~/lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
+import { Button } from "~/app/_components/ui/button";
 
 export function GoogleSignInButton() {
   const searchParams = useSearchParams();
   const callbackPath = decodeURIComponent(
-    searchParams.get("callbackPath") ?? "/",
+    searchParams.get("callbackPath") ?? "/chat",
   );
 
-  const handleSignIn = () => {
-    // ESLint suppression for better-auth type resolution issues
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    signIn.social({
+  const handleSignIn = async () => {
+    await signIn.social({
       provider: "google",
       callbackURL: callbackPath,
     });
   };
 
   return (
-    <button
+    <Button
       onClick={handleSignIn}
-      className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+      className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 hover:shadow-md active:scale-95"
     >
-      Sign in with Google
-    </button>
+      <FcGoogle className="text-xl" />
+      <span>Continue with Google</span>
+    </Button>
   );
 }
