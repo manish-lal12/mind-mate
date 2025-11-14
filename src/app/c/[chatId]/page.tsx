@@ -6,6 +6,7 @@ import { Send } from "lucide-react";
 import { api } from "~/trpc/react";
 import { useSession } from "~/lib/auth-client";
 import { ConversationSidebar } from "~/app/_components/conversation-sidebar";
+import { MessageDisplay } from "~/app/_components/message-display";
 import { Button } from "~/app/_components/ui/button";
 
 interface Message {
@@ -198,20 +199,11 @@ export default function ChatPage() {
             </div>
           ) : (
             messages.map((msg) => (
-              <div
+              <MessageDisplay
                 key={msg.id}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-md rounded-lg px-4 py-3 ${
-                    msg.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-slate-200/50 text-slate-900"
-                  }`}
-                >
-                  <p className="text-sm">{msg.content}</p>
-                </div>
-              </div>
+                content={msg.content}
+                role={msg.role as "user" | "assistant"}
+              />
             ))
           )}
 

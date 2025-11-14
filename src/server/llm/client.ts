@@ -1,6 +1,7 @@
 import { Readable } from "stream";
 import { GoogleGenAI as GoogleGenAISDK } from "@google/genai";
 import { SYSTEM_PROMPT } from "~/lib/system_prompt";
+import { sanitizeLLMResponse } from "~/lib/llm-formatter";
 
 // Type definitions for GoogleGenAI SDK to improve type safety
 interface ContentPart {
@@ -141,5 +142,5 @@ export async function getLLMResponse(
   await processLLMStream(stream, (c) => {
     full += c;
   });
-  return full;
+  return sanitizeLLMResponse(full);
 }
