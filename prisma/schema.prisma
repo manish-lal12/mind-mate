@@ -12,16 +12,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String         @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean        @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
   chats         Chat[]
+  consultations Consultation[]
+  reviews       ExpertReview[]
 
   @@unique([email])
   @@map("user")
@@ -95,4 +97,109 @@ model Message {
 
   @@index([chatId])
   @@map("message")
+}
+
+// Expert/Professional Models for Marketplace
+
+model Expert {
+  id           String  @id @default(cuid())
+  name         String
+  email        String  @unique
+  phone        String?
+  bio          String?
+  profileImage String?
+  isVerified   Boolean @default(false)
+
+  // Professional Info
+  profession      String // "therapist", "doctor", "consultant"
+  specialties     String[] // e.g., ["anxiety", "depression", "relationship", "career"]
+  licenseNumber   String?
+  yearsExperience Int      @default(0)
+  education       String?
+
+  // Availability & Pricing
+  hourlyRate   Int // in cents (e.g., 10000 = $100)
+  availability String // JSON string of availability schedule
+  maxClients   Int    @default(10)
+
+  // Contact & Social
+  websiteUrl  String?
+  linkedinUrl String?
+  twitterUrl  String?
+
+  // Metadata
+  rating       Float    @default(0) // average rating 0-5
+  totalReviews Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  consultations Consultation[]
+  reviews       ExpertReview[]
+
+  @@index([profession])
+  @@index([isVerified])
+  @@map("expert")
+}
+
+model Consultation {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expertId String
+  expert   Expert @relation(fields: [expertId], references: [id], onDelete: Cascade)
+
+  // Consultation Details
+  title       String
+  description String?
+  problem     String // User's main concern/problem
+
+  // Scheduling
+  scheduledDate DateTime
+  duration      Int      @default(60) // in minutes
+  status        String   @default("pending") // "pending", "confirmed", "completed", "cancelled"
+
+  // Payment
+  totalCost     Int // in cents
+  paymentStatus String @default("pending") // "pending", "completed", "refunded"
+
+  // Notes
+  consultantNotes String?
+  userNotes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([expertId])
+  @@index([status])
+  @@map("consultation")
+}
+
+model ExpertReview {
+  id       String @id @default(cuid())
+  expertId String
+  expert   Expert @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rating  Int // 1-5
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([expertId, userId]) // One review per user per expert
+  @@index([expertId])
+  @@map("expert_review")
+}
+
+model ProblemCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "anxiety", "depression", "career guidance"
+  description String?
+  icon        String? // emoji or icon name
+  createdAt   DateTime @default(now())
+
+  @@map("problem_category")
 }

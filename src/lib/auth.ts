@@ -4,9 +4,6 @@ import { prisma } from "~/lib/db";
 
 export const auth = betterAuth({
   basePath: "/api/auth",
-  baseURL: process.env.BETTER_AUTH_URL ?? 
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
-  trustHost: true,
   database: prismaAdapter(
     prisma as unknown as Parameters<typeof prismaAdapter>[0],
     {

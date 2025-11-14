@@ -115,3 +115,30 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+/**
+ * Protected (authenticated) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use this instead.
+ * It verifies the session exists by checking headers.
+ */
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    // For now, we'll just check if user info is in headers
+    // In a real app, you'd validate a JWT or session token
+    const userHeader = ctx.headers.get("x-user-id");
+    if (!userHeader) {
+      throw new Error("Unauthorized - no user session");
+    }
+    return next({
+      ctx: {
+        ...ctx,
+        session: {
+          user: {
+            id: userHeader,
+          },
+        },
+      },
+    });
+  });

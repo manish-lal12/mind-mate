@@ -57,13 +57,15 @@ export default function HeroSection() {
               Start Your Journey
             </Button>
           </Link>
-          <Button
-            variant="outline"
-            size="lg"
-            className="rounded-full border-slate-300 bg-transparent px-8 py-6 text-lg font-semibold transition-all duration-300 hover:cursor-pointer hover:bg-slate-50"
-          >
-            Learn More
-          </Button>
+          <Link href="/marketplace">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full border-slate-300 bg-transparent px-8 py-6 text-lg font-semibold transition-all duration-300 hover:cursor-pointer hover:bg-slate-50"
+            >
+              Find an Expert
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

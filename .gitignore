@@ -12,6 +12,10 @@
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
 db.sqlite
+/prisma/migrations/
+
+# prisma client
+/src/lib/generated/
 
 # next.js
 /.next/
@@ -48,4 +52,3 @@ yarn-error.log*
 .turbo
 
 .github/
-/src/lib/generated/

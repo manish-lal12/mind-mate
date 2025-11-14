@@ -42,7 +42,7 @@ export default function AIFeaturesSection() {
                 key={index}
                 className="flex flex-col items-start rounded-2xl border border-white/80 bg-white/60 p-8 backdrop-blur-sm transition-all duration-300 hover:border-blue-200/50 hover:shadow-xl"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-400 to-green-400">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-green-400">
                   <Icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-slate-900">

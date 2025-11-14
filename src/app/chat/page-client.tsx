@@ -2,8 +2,9 @@
 
 import type React from "react";
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { api } from "~/trpc/react";
 import { useSession } from "~/lib/auth-client";
 
@@ -87,17 +88,28 @@ export default function GreetingPageClient() {
       {/* Main Content */}
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-2xl space-y-8">
-          {/* Header */}
-          <div className="space-y-2 text-center">
-            <h1 className="text-4xl font-bold text-slate-900 md:text-5xl">
-              Welcome,{" "}
-              <span className="bg-linear-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                {getFirstName(session?.user?.name)}
-              </span>
-            </h1>
-            <p className="text-base text-slate-600 md:text-lg">
-              I&rsquo;m here to listen and support your mental wellness journey
-            </p>
+          {/* Header with Navigation */}
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold text-slate-900 md:text-5xl">
+                Welcome,{" "}
+                <span className="bg-linear-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                  {getFirstName(session?.user?.name)}
+                </span>
+              </h1>
+              <p className="text-base text-slate-600 md:text-lg">
+                I&rsquo;m here to listen and support your mental wellness
+                journey
+              </p>
+            </div>
+            {/* Find Expert Button */}
+            <Link
+              href="/marketplace"
+              className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 font-medium text-blue-700 transition-all duration-200 hover:border-blue-300 hover:bg-blue-100 hover:shadow-md"
+            >
+              <Users className="h-5 w-5" />
+              <span className="hidden sm:inline">Find Expert</span>
+            </Link>
           </div>
 
           {/* Suggestion Cards */}
