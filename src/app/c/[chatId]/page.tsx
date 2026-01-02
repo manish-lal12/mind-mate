@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { Send } from "lucide-react";
 import { api } from "~/trpc/react";
@@ -32,6 +32,7 @@ export default function ChatPage() {
   const [isSending, setIsSending] = useState(false);
   const [isLLMProcessing, setIsLLMProcessing] = useState(false);
   const [sessionTimeout, setSessionTimeout] = useState(false);
+  const hasInitializedRef = useRef(false);
 
   // Set timeout to stop loading if session takes too long
   useEffect(() => {
@@ -92,8 +93,12 @@ export default function ChatPage() {
       if (
         !hasAssistantMessage &&
         chat.messages.length > 0 &&
-        session?.user?.id
+        session?.user?.id &&
+        !hasInitializedRef.current
       ) {
+        // Mark that we've initialized to prevent duplicate requests
+        hasInitializedRef.current = true;
+
         // Delay slightly to ensure state updates
         setTimeout(() => {
           const allMessages = chat.messages.map((msg) => ({
