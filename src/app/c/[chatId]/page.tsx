@@ -106,12 +106,12 @@ export default function ChatPage() {
             chatId,
             userId: session.user.id,
             messages: allMessages,
-            model: process.env.NEXT_PUBLIC_LLM_MODEL ?? "gemini-2.0-flash",
+            model: process.env.NEXT_PUBLIC_LLM_MODEL ?? "gemini-2.5-flash-lite",
           });
         }, 500);
       }
     }
-  }, [getChatQuery.data, session?.user?.id, chatId]);
+  }, [getChatQuery.data, session?.user?.id, chatId, generateResponse]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isSending || !session?.user?.id) return;
@@ -152,7 +152,7 @@ export default function ChatPage() {
       chatId,
       userId: session.user.id,
       messages: allMessages,
-      model: process.env.NEXT_PUBLIC_LLM_MODEL ?? "gemini-2.0-flash",
+      model: process.env.NEXT_PUBLIC_LLM_MODEL ?? "gemini-2.5-flash-lite",
     });
   };
 

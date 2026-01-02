@@ -99,7 +99,21 @@ model Message {
   @@map("message")
 }
 
-// Expert/Professional Models for Marketplace
+enum Profession {
+  THERAPIST
+  DOCTOR
+  CONSULTANT
+}
+
+enum Speciality {
+  ANXIETY
+  DEPRESSION
+  RELATIONSHIP
+  CAREER
+  STRESS
+  SELF_HELP
+  OTHER
+}
 
 model Expert {
   id           String  @id @default(cuid())
@@ -110,17 +124,15 @@ model Expert {
   profileImage String?
   isVerified   Boolean @default(false)
 
-  // Professional Info
-  profession      String // "therapist", "doctor", "consultant"
-  specialties     String[] // e.g., ["anxiety", "depression", "relationship", "career"]
+  profession      Profession
+  specialties     Speciality[]
   licenseNumber   String?
-  yearsExperience Int      @default(0)
+  yearsExperience Int          @default(0)
   education       String?
 
-  // Availability & Pricing
   hourlyRate   Int // in cents (e.g., 10000 = $100)
-  availability String // JSON string of availability schedule
-  maxClients   Int    @default(10)
+  availability Json // JSON string of availability schedule
+  maxClients   Int  @default(10)
 
   // Contact & Social
   websiteUrl  String?
@@ -142,6 +154,19 @@ model Expert {
   @@map("expert")
 }
 
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+}
+
+enum ScheduleStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
 model Consultation {
   id       String @id @default(cuid())
   userId   String
@@ -156,12 +181,12 @@ model Consultation {
 
   // Scheduling
   scheduledDate DateTime
-  duration      Int      @default(60) // in minutes
-  status        String   @default("pending") // "pending", "confirmed", "completed", "cancelled"
+  duration      Int            @default(60)
+  status        ScheduleStatus @default(PENDING)
 
   // Payment
   totalCost     Int // in cents
-  paymentStatus String @default("pending") // "pending", "completed", "refunded"
+  paymentStatus PaymentStatus @default(PENDING)
 
   // Notes
   consultantNotes String?
@@ -174,6 +199,12 @@ model Consultation {
   @@index([expertId])
   @@index([status])
   @@map("consultation")
+}
+
+enum ReviewType {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }
 
 model ExpertReview {

@@ -6,7 +6,7 @@ async function main() {
   console.log("🌱 Seeding database with test experts...");
 
   // Create problem categories
-  const categories = await Promise.all([
+  await Promise.all([
     prisma.problemCategory.upsert({
       where: { name: "Anxiety" },
       update: {},

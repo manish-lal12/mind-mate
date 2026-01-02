@@ -1,3 +1,5 @@
-export default function SignupPage() {
-  return <div>Signup Page</div>;
+import SignUpPageClient from "~/app/auth/signup/page-client";
+
+export default function SignUpPage() {
+  return <SignUpPageClient />;
 }
