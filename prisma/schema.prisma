@@ -99,22 +99,6 @@ model Message {
   @@map("message")
 }
 
-enum Profession {
-  THERAPIST
-  DOCTOR
-  CONSULTANT
-}
-
-enum Speciality {
-  ANXIETY
-  DEPRESSION
-  RELATIONSHIP
-  CAREER
-  STRESS
-  SELF_HELP
-  OTHER
-}
-
 model Expert {
   id           String  @id @default(cuid())
   name         String
@@ -124,8 +108,8 @@ model Expert {
   profileImage String?
   isVerified   Boolean @default(false)
 
-  profession      Profession
-  specialties     Speciality[]
+  profession      String
+  specialties     String[]
   licenseNumber   String?
   yearsExperience Int          @default(0)
   education       String?
@@ -154,19 +138,6 @@ model Expert {
   @@map("expert")
 }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  REFUNDED
-}
-
-enum ScheduleStatus {
-  PENDING
-  CONFIRMED
-  COMPLETED
-  CANCELLED
-}
-
 model Consultation {
   id       String @id @default(cuid())
   userId   String
@@ -181,12 +152,12 @@ model Consultation {
 
   // Scheduling
   scheduledDate DateTime
-  duration      Int            @default(60)
-  status        ScheduleStatus @default(PENDING)
+  duration      Int    @default(60)
+  status        String @default("pending")
 
   // Payment
   totalCost     Int // in cents
-  paymentStatus PaymentStatus @default(PENDING)
+  paymentStatus String @default("pending")
 
   // Notes
   consultantNotes String?
@@ -199,12 +170,6 @@ model Consultation {
   @@index([expertId])
   @@index([status])
   @@map("consultation")
-}
-
-enum ReviewType {
-  POSITIVE
-  NEUTRAL
-  NEGATIVE
 }
 
 model ExpertReview {
